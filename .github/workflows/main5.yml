@@ -22,14 +22,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Clear Corrupt Maven Cache
-        run: rm -rf ~/.m2/repository/org/seleniumhq/selenium
-
-      - name: Build Executable (Force Maven Update)
+      - name: Force Clean and Build (Re-download Dependencies)
         run: mvn clean package -U
 
-      - name: List Target Folder
-        run: ls -lh target/
+      - name: Verify Target Folder
+        run: ls -l target/
 
       - name: Run Tests
-        run: java -jar target/great1.jar -Dwebdriver.chrome.driver=$CHROME_DRIVER
+        run: java -jar target/great1.jar
