@@ -16,6 +16,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Clear Maven Repository Cache
+        run: rm -rf ~/.m2/repository  # Remove corrupted JAR files
+
       - name: Set Up Java
         uses: actions/setup-java@v3
         with:
@@ -34,11 +37,10 @@ jobs:
 
       - name: Build Executable
         run: |
-          mvn clean package  # If using Maven
+          mvn clean package -U  # Force re-download of dependencies
           # OR
           # ./gradlew build  # If using Gradle
 
       - name: Run Tests
         run: |
           java -jar target/your-suite.jar -Dwebdriver.chrome.driver=$CHROME_DRIVER
-
