@@ -1,0 +1,44 @@
+name: Build and Run Test Suite
+
+on:
+  push:
+    branches:
+      - master  # Change this to your specific branch (e.g., develop, feature-branch)
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'  # Change based on your project
+
+      - name: Install Dependencies (Chrome & WebDriver)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          wget https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+          echo "CHROME_DRIVER=/usr/local/bin/chromedriver" >> $GITHUB_ENV
+
+      - name: Build Executable
+        run: |
+          mvn clean package  # If using Maven
+          # OR
+          # ./gradlew build  # If using Gradle
+
+      - name: Run Tests
+        run: |
+          java -jar target/your-suite.jar -Dwebdriver.chrome.driver=$CHROME_DRIVER
+
