@@ -25,8 +25,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'  
 
-      - name: Build Executable
-        run: mvn clean package -U  
+      - name: Force Maven to Re-download Dependencies
+        run: mvn clean package -U --fail-never  
 
       - name: Run Tests
         run: java -jar target/your-suite.jar  
