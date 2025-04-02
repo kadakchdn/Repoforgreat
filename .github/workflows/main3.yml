@@ -16,17 +16,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Clear Maven Cache (Fix Corrupt JARs)
-        run: rm -rf ~/.m2/repository  
-
       - name: Set Up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  
+          java-version: '17'
 
-      - name: Force Maven to Re-download Dependencies
-        run: mvn clean package -U --fail-never  
+      - name: Clean Maven Repository (Fix Corrupt JARs)
+        run: rm -rf ~/.m2/repository/*
+
+    
+      - name: Build Executable (Force Maven Update)
+        run: mvn clean package -U
+
+      - name: Verify JAR Files
+        run: find ~/.m2/repository -name "*.jar"
 
       - name: Run Tests
-        run: java -jar target/great1.jar  
+        run: java -jar target/great1.jar -Dwebdriver.chrome.driver=$CHROME_DRIVER
