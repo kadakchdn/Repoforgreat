@@ -24,9 +24,9 @@ jobs:
       - name: Build with Maven (Force Update)
         run: mvn clean install -U -Dmaven.repo.local=~/.m2/repository -Dfile.encoding=UTF-8
 
-      # Optional: Cache Maven dependencies (avoid using if issues persist)
+      # ✅ Use latest cache version (v4)
       - name: Cache Maven Dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}
