@@ -3,7 +3,7 @@ name: Build and Run Test Suite
 on:
   push:
     branches:
-      - master  
+      - master
   pull_request:
     branches:
       - master
@@ -22,15 +22,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Clean Maven Repository (Fix Corrupt JARs)
-        run: rm -rf ~/.m2/repository/*
+      - name: Clear Corrupt Maven Cache
+        run: rm -rf ~/.m2/repository/org/seleniumhq/selenium
 
-    
       - name: Build Executable (Force Maven Update)
         run: mvn clean package -U
 
-      - name: Verify JAR Files
-        run: find ~/.m2/repository -name "*.jar"
+      - name: List Target Folder
+        run: ls -lh target/
 
       - name: Run Tests
         run: java -jar target/great1.jar -Dwebdriver.chrome.driver=$CHROME_DRIVER
