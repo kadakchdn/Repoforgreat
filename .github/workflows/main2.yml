@@ -29,4 +29,4 @@ jobs:
         run: mvn clean package -U --fail-never  
 
       - name: Run Tests
-        run: java -jar target/your-suite.jar  
+        run: java -jar target/great1.jar  
