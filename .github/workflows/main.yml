@@ -3,7 +3,7 @@ name: Build and Run Test Suite
 on:
   push:
     branches:
-      - master  # Change this to your specific branch (e.g., develop, feature-branch)
+      - master  
   pull_request:
     branches:
       - master
@@ -16,31 +16,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Clear Maven Repository Cache
-        run: rm -rf ~/.m2/repository  # Remove corrupted JAR files
+      - name: Clear Maven Cache (Fix Corrupt JARs)
+        run: rm -rf ~/.m2/repository  
 
       - name: Set Up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  # Change based on your project
-
-      - name: Install Dependencies (Chrome & WebDriver)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          wget https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
-          echo "CHROME_DRIVER=/usr/local/bin/chromedriver" >> $GITHUB_ENV
+          java-version: '17'  
 
       - name: Build Executable
-        run: |
-          mvn clean package -U  # Force re-download of dependencies
-          # OR
-          # ./gradlew build  # If using Gradle
+        run: mvn clean package -U  
 
       - name: Run Tests
-        run: |
-          java -jar target/your-suite.jar -Dwebdriver.chrome.driver=$CHROME_DRIVER
+        run: java -jar target/your-suite.jar  
